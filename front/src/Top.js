@@ -27,57 +27,6 @@ export default function Top() {
   const [prompt, setPrompt] = React.useState(0);
   const [seed, setSeed] = React.useState(0);
 
-  useEffect(() => {
-    // Update the document title using the browser API
-    document.title = `You clicked ${prompt} times`;
-  });
-
-//  const onSubmit = (e) =>
-//    console.log('DEAD BEEF')
-
-    /*
-    <div>
-      <h1>AI Dalí</h1>
-
-      <Box>	
-      <form onSubmit={onSubmit}>
-        <FormControl>
-          <FormLabel>Prompt</FormLabel>
-          <Input type='text' placeholder='呪文(英語)'/>
-          <FormLabel>Seed</FormLabel>
-          <NumberInput max={2147483647} min={0}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-
-        <Button
-          mt={4}
-          colorScheme='teal'
-          type='submit'
-        >
-          Submit
-        </Button>
-      </form>
-      </Box>	
-
-    </div>
-    */
-
-//          <Field name='name' validate={validateName}>
-  function validateName(value) {
-    let error
-    if (!value) {
-      error = 'Name is required'
-    } else if (value.toLowerCase() !== 'naruto') {
-      error = "Jeez! You're not a fan 😱"
-    }
-    return error
-  }
-
   return (
 
   <Center>
@@ -94,13 +43,11 @@ export default function Top() {
     </Text>
     </Stack>
     <Formik
-      initialValues={{ prompt: "Daimyo's procession of 20cm in length that only I can see.", seed: 42, scale: 0.7, ddim_steps: 50, n_iter: 1 }}
+      initialValues={{ prompt: "Daimyo's procession of 20cm in length that only I can see.", seed: 42, scale: 10.0, ddim_steps: 50, n_iter: 1 }}
 
       onSubmit={(values, actions) => {
         console.log(JSON.stringify(values, null, 2))
         setTimeout(() => {
-          //alert(JSON.stringify(values, null, 2))
-          //actions.setSubmitting(false)
 
           fetch("https://sd.tokyo-tsushin.com/txt2img/", {method: 'POST', headers:{'Content-Type': 'application/json'}, body: JSON.stringify(values, null, 2)})
           .then(res => res.json())

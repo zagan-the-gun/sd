@@ -85,6 +85,7 @@ async def txt2img_old(background_task:BackgroundTasks, user_name: str = Form(), 
 
 
 
+
 @app.get("/img/{file_name}")
 async def get_img(file_name, response: Response):
     print(file_name)
@@ -101,8 +102,6 @@ def txt2img_task(t2i, filename):
     subprocess.run(f'/home/ishizuka/txt2img_v2.sh {filename} "{t2i.prompt}" {t2i.seed} {t2i.n_iter} {t2i.scale} {t2i.ddim_steps}', shell=True)
     img = {'file': open(f"/home/ishizuka/stable-diffusion/outputs/txt2img-samples/{filename}-grid.png", 'rb')}
 
-    #subprocess.run(f"rm /home/ishizuka/stable-diffusion/outputs/txt2img-samples/{filename}-grid.png", shell=True)
-    #subprocess.run(f"rm /home/ishizuka/stable-diffusion/outputs/txt2img-samples/samples/{filename}*.png", shell=True)
     print('txt2img_task終了')
 
 class T2I(BaseModel):
@@ -113,16 +112,14 @@ class T2I(BaseModel):
     n_iter: Union[int, None] = 1
 
 @app.post("/txt2img/")
-#async def txt2img(background_task:BackgroundTasks, prompt: str = Form(), seed: str = Form()):
 async def txt2img(background_task:BackgroundTasks, t2i: T2I):
     filename = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
-    print('DEAD BEEF')
-    print(f"prompt: {t2i.prompt}, seed: {t2i.seed}")
-    #print(f"prompt: {prompt}, seed: {seed}")
-    #background_task.add_task(heavy_task, user_name = str(user_name), prompt = str(prompt), options = str(options))
     background_task.add_task(txt2img_task, t2i = t2i, filename = str(filename))
-    #return {'text': f"prompt: {prompt}, seed: {seed}"}
     return {'filename': filename}
+
+
+
+
 
 
 def img2img_task(img_name, prompt, options):
