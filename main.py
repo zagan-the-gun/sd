@@ -13,22 +13,6 @@ import os
 
 
 
-TOKEN = 'xoxp-52724098080-586453576214-1594347814037-a136398c8675610bae30fc5c1fc71eb3'
-CHANNEL = 'すぐ消す'
-#CHANNEL = 'インフラ部隊'
-
-#class Outgoing(BaseModel):
-#    token: Union[str, None] = None
-#    team_id: Union[str, None] = None
-#    team_domain: Union[str, None] = None
-#    channel_id: Union[str, None] = None
-#    channel_name: Union[str, None] = None
-#    timestamp: Union[str, None] = None
-#    user_id: Union[str, None] = None
-#    user_name: Union[str, None] = None
-#    text: Union[str, None] = None
-#    trigger_word: Union[str, None] = None
-
 app = FastAPI()
 
 UPLOAD_DIR = "./files"
@@ -53,8 +37,8 @@ def heavy_task(user_name, prompt, options):
     subprocess.run(f'/home/ishizuka/txt2img.sh {filename} "{prompt}" "{options}"', shell=True)
     img = {'file': open(f"/home/ishizuka/stable-diffusion/outputs/txt2img-samples/{filename}-grid.png", 'rb')}
     param = {
-        'token':TOKEN,
-        'channels':CHANNEL,
+        'token':os.environ.get('SLACK_TOKEN'),
+        'channels':os.environ.get('SLACK_CHANNEL'),
         'filename': user_name + filename + '.png',
         #'filename': 'IATer75irH0JUhjz-grid-0004.png',
         'initial_comment': f'{user_name}\n{prompt}',
@@ -135,8 +119,8 @@ def img2img_task(img_name, prompt, options):
 
     img = {'file': open(f"/home/ishizuka/stable-diffusion/outputs/img2img-samples/{filename}-grid.png", 'rb')}
     param = {
-        'token':TOKEN,
-        'channels':CHANNEL,
+        'token':os.environ.get('SLACK_TOKEN'),
+        'channels':os.environ.get('SLACK_CHANNEL'),
         'filename': filename + '.png',
         #'filename': 'IATer75irH0JUhjz-grid-0004.png',
         'initial_comment': f'{prompt}',
